@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qw-webhook
+  namespace: default
+  labels:
+    app: qw-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qw-webhook
+  template:
+    metadata:
+      labels:
+        app: qw-webhook
+    spec:
+      containers:
+        - name: qw-webhook
+          image: qwwebhook:v1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /etc/webhook/certs
+              readOnly: true
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: qwwebhook-tls
